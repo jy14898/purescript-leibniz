@@ -33,6 +33,7 @@ import Prelude
 import Unsafe.Coerce (unsafeCoerce)
 
 -- | Two types are equal if they are _equal in all contexts_.
+newtype Leibniz :: forall k. k -> k -> Type
 newtype Leibniz a b = Leibniz (forall f. f a -> f b)
 
 infix 4 type Leibniz as ~
@@ -144,6 +145,7 @@ lowerLeibniz3of3 _ = Leibniz unsafeCoerce
 -- | Its job is to distinguish the two types `a` and `b` (if possible)
 -- | by mapping them to the different output types `Unit` and `Void`
 -- | respectively.
+class Distinguish :: forall k. k -> k -> k -> Type -> Constraint
 class Distinguish a b c o | a b c -> o
 
 instance distinguishLeft :: Distinguish a b a Unit else
@@ -151,7 +153,7 @@ instance distinguishRight :: Distinguish a b b Void
 
 -- | A type for which `Distinguished a b c` is isomorphic to the unique output
 -- | `o` of the `Distinguish` relation such that `Distinguish a b c o` holds.
-foreign import data Distinguished :: Type -> Type -> Type -> Type
+foreign import data Distinguished :: forall k. k -> k -> k -> Type
 
 distinguished :: forall a b c r. Distinguish a b c r => r -> Distinguished a b c
 distinguished = unsafeCoerce

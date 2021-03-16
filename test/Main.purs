@@ -34,9 +34,9 @@ applyBalanced f (Branch b1) (Branch b2) =
       let relabel = coerce (liftLeibniz1of2 (lowerLeibniz (x <<< symm y)))
        in Branch
             (mkExists
-	            (B x
+                (B x
                 (applyBalanced f l1 (relabel l2))
-	              (applyBalanced f r1 (relabel r2))))
+                (applyBalanced f r1 (relabel r2))))
 applyBalanced _ (Leaf x _) (Branch b) =
   b # runExists \(B y _ _) ->
     refute (x <<< symm y)
